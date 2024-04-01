@@ -4,6 +4,10 @@ import {MainStackParamList} from './MainStack';
 import {NavigationContainer} from '@react-navigation/native';
 import {ROUTES} from './Routes';
 import HomeScreen from '~/screens/home/HomeScreen';
+import GamesScreen from '~/screens/games/GamesScreen';
+import RandomWordGeneratorScreen from '~/screens/randomWordGenerator/RandomWordGeneratorScreen';
+import DictionaryScreen from '~/screens/dictionary/DictionaryScreen';
+import WordCreatorScreen from '~/screens/wordCreator/WordCreatorScreen';
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
@@ -15,6 +19,19 @@ const MainNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name={ROUTES.HOME as keyof MainStackParamList} component={HomeScreen} />
+        <Stack.Screen name={ROUTES.GAMES as keyof MainStackParamList} component={GamesScreen} />
+        <Stack.Screen
+          name={ROUTES.RANDOM_WORD_GENERATOR as keyof MainStackParamList}
+          component={RandomWordGeneratorScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.DICTIONARY as keyof MainStackParamList}
+          component={DictionaryScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.WORD_CREATOR as keyof MainStackParamList}
+          component={WordCreatorScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
