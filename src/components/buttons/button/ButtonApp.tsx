@@ -9,6 +9,7 @@ import TextApp from '~/components/texts/text/TextApp';
 
 /**
  * @description Application button component
+ * @snippet appButton
  * @example Minimal Example
  * <ButtonApp onPress={() => { }} />
  * @example Full Example

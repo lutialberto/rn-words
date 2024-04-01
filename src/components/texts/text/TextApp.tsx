@@ -4,6 +4,7 @@ import TextStyles from '~/constants/TextStyles';
 
 /**
  * @description Application text component
+ * @snippet appText
  * @example Minimal Example
  * <TextApp>GenericText</TextApp>
  * @example Full Example
