@@ -8,6 +8,7 @@ import GamesScreen from '~/screens/games/GamesScreen';
 import RandomWordGeneratorScreen from '~/screens/randomWordGenerator/RandomWordGeneratorScreen';
 import DictionaryScreen from '~/screens/dictionary/DictionaryScreen';
 import WordCreatorScreen from '~/screens/wordCreator/WordCreatorScreen';
+import HangmanScreen from '~/screens/games/screens/hangman/HangmanScreen';
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
@@ -19,7 +20,16 @@ const MainNavigator = () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name={ROUTES.HOME as keyof MainStackParamList} component={HomeScreen} />
-        <Stack.Screen name={ROUTES.GAMES as keyof MainStackParamList} component={GamesScreen} />
+
+        <Stack.Screen
+          name={ROUTES.GAMES.GAMES as keyof MainStackParamList}
+          component={GamesScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.GAMES.HANGMAN as keyof MainStackParamList}
+          component={HangmanScreen}
+        />
+
         <Stack.Screen
           name={ROUTES.RANDOM_WORD_GENERATOR as keyof MainStackParamList}
           component={RandomWordGeneratorScreen}
