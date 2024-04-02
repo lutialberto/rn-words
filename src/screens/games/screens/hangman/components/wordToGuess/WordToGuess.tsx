@@ -27,7 +27,7 @@ const WordToGuess = ({word, selectedLetters}: WordToGuessProps) => {
             },
           ]}
           key={index}>
-          {selectedLetters.includes(letter) ? letter : ''}
+          {selectedLetters.includes(letter) || letter === '-' ? letter : ''}
         </TextApp>
       ))}
     </View>

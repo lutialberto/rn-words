@@ -23,9 +23,11 @@ const HangmanScreen = () => {
     if (!realLetter) {
       setAvailableMistakes(availableMistakes - 1);
     }
+
     const newSelectedLetters = [...selectedLetters, realLetter || letter];
     setSelectedLetters(newSelectedLetters);
-    word?.split('').every(l => newSelectedLetters.includes(l)) && setWordGuessed(true);
+
+    word?.split('').every(l => newSelectedLetters.includes(l) || l === '-') && setWordGuessed(true);
   };
 
   const getLetterContainedInWord = (letter: string): string | undefined => {
