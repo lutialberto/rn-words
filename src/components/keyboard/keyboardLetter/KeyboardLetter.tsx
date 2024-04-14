@@ -8,7 +8,7 @@ interface KeyboardLetterProps {
   status: LetterStatus;
   disabled: boolean;
 }
-export type LetterStatus = 'available' | 'error' | 'success' | 'disabled' | 'hint';
+export type LetterStatus = 'available' | 'error' | 'success' | 'disabled' | 'hint' | 'highlight';
 
 const KeyboardLetter = ({letter, onPress, status, disabled}: KeyboardLetterProps) => {
   return (
@@ -23,6 +23,7 @@ const KeyboardLetter = ({letter, onPress, status, disabled}: KeyboardLetterProps
         status === 'success' && {backgroundColor: 'green'},
         status === 'disabled' && {backgroundColor: 'gray'},
         status === 'hint' && {backgroundColor: 'yellow'},
+        status === 'highlight' && {backgroundColor: 'blue'},
       ]}>
       <TextApp style={[{fontSize: 20, width: 20, textAlign: 'center'}]}>{letter}</TextApp>
     </TouchableOpacity>

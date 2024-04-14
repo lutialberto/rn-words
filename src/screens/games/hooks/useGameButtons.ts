@@ -6,6 +6,10 @@ export const useGameButtons = (navigator: MainScreenNavigationType) => {
       title: 'Ahorcado',
       onPress: () => navigator.navigate('Games/Hangman'),
     },
+    {
+      title: 'Wordle',
+      onPress: () => navigator.navigate('Games/Wordle'),
+    },
   ];
 
   return buttons;

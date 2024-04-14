@@ -3,9 +3,9 @@ import React, {useEffect, useState} from 'react';
 import HangScenario from './components/hangScenario/HangScenario';
 import WordToGuess from './components/wordToGuess/WordToGuess';
 import TextApp from '~/components/texts/text/TextApp';
-import Keyboard from './components/keyboard/Keyboard';
+import HangmanKeyboard from './components/keyboard/HangmanKeyboard';
 import ButtonApp from '~/components/buttons/button/ButtonApp';
-import {useWordGenerator} from './hooks/useWordGenerator';
+import {useWordGenerator} from '../../../../hooks/useWordGenerator';
 import TextStyles from '~/constants/TextStyles';
 
 const HangmanScreen = () => {
@@ -19,38 +19,14 @@ const HangmanScreen = () => {
   }, []);
 
   const onLetterPress = (letter: string) => {
-    const realLetter = getLetterContainedInWord(letter);
-    if (!realLetter) {
+    if (!word?.includes(letter)) {
       setAvailableMistakes(availableMistakes - 1);
     }
 
-    const newSelectedLetters = [...selectedLetters, realLetter || letter];
+    const newSelectedLetters = [...selectedLetters, letter];
     setSelectedLetters(newSelectedLetters);
 
     word?.split('').every(l => newSelectedLetters.includes(l) || l === '-') && setWordGuessed(true);
-  };
-
-  const getLetterContainedInWord = (letter: string): string | undefined => {
-    if (word?.includes(letter)) return letter;
-
-    const vocals = ['A', 'E', 'I', 'O', 'U'];
-    const letterIsVocal = vocals.includes(letter);
-    if (!letterIsVocal) return;
-
-    switch (letter) {
-      case 'A':
-        return word?.includes('Á') ? 'Á' : undefined;
-      case 'E':
-        return word?.includes('É') ? 'É' : undefined;
-      case 'I':
-        return word?.includes('Í') ? 'Í' : undefined;
-      case 'O':
-        return word?.includes('Ó') ? 'Ó' : undefined;
-      case 'U':
-        return word?.includes('Ú') ? 'Ú' : word?.includes('Ü') ? 'Ü' : undefined;
-    }
-
-    return;
   };
 
   return (
@@ -68,7 +44,7 @@ const HangmanScreen = () => {
       {!!word && (
         <>
           <WordToGuess word={word} selectedLetters={selectedLetters} />
-          <Keyboard
+          <HangmanKeyboard
             onLetterPress={onLetterPress}
             selectedLetters={selectedLetters}
             word={word}
