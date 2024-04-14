@@ -1,9 +1,11 @@
-import wordsFile from '~/assets/words.json';
+import {fetchWordsByFilter} from '~/services/words.service';
 
 export const useWordValidator = () => {
   const isValidWord = async (word: string) => {
-    const words = await wordsFile.words;
-    return words.find(w => w.simpleValue === word.toLowerCase());
+    const words = await fetchWordsByFilter({
+      value: word,
+    });
+    return words?.length > 0;
   };
 
   return {
