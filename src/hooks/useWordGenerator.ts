@@ -1,16 +1,19 @@
+import axios from 'axios';
 import {useState} from 'react';
-import wordsFile from '~/assets/words.json';
+import {Alert} from 'react-native';
+import {BASE_URL} from '~/services/Config';
+import {fetchRandomWord} from '~/services/words.service';
 
 export const useWordGenerator = () => {
   const [word, setWord] = useState(undefined as string | undefined);
 
-  const generateNewWord = async (size?: number) => {
-    const words = await wordsFile.words;
-    const filtered = !!size ? words.filter(w => w.value.length === size) : words;
-
-    const length = filtered.length === 0 ? words.length : filtered.length;
-    const randomIndex = Math.floor(Math.random() * length);
-    setWord(filtered[randomIndex].simpleValue.toUpperCase());
+  const generateNewWord = async (length?: number) => {
+    try {
+      const response = await fetchRandomWord(length);
+      setWord(response);
+    } catch (error) {
+      Alert.alert('Error', 'Error generating new word');
+    }
   };
 
   return {word, generateNewWord};
