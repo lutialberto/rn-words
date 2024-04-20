@@ -8,6 +8,7 @@ import {useWordGenerator} from '../../../../hooks/useWordGenerator';
 import TextStyles from '~/constants/TextStyles';
 import {MAX_MISTAKES} from './Constants';
 import GameOverModal from './components/gameOverModal/GameOverModal';
+import Loading from '~/components/loading/Loading';
 
 const HangmanScreen = () => {
   const {generateNewWord, word} = useWordGenerator();
@@ -31,13 +32,7 @@ const HangmanScreen = () => {
     generateNewWord();
   };
 
-  if (!word) {
-    return (
-      <View style={styles.container}>
-        <TextApp style={TextStyles.screenTitle}>Cargando...</TextApp>
-      </View>
-    );
-  }
+  if (!word) return <Loading />;
 
   return (
     <View style={styles.container}>
