@@ -7,26 +7,22 @@ import HangmanKeyboard from './components/keyboard/HangmanKeyboard';
 import ButtonApp from '~/components/buttons/button/ButtonApp';
 import {useWordGenerator} from '../../../../hooks/useWordGenerator';
 import TextStyles from '~/constants/TextStyles';
+import {MAX_MISTAKES} from './Constants';
 
 const HangmanScreen = () => {
-  const [availableMistakes, setAvailableMistakes] = useState(7);
   const {generateNewWord, word} = useWordGenerator();
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
-  const [wordGuessed, setWordGuessed] = useState(false);
 
   useEffect(() => {
     generateNewWord();
   }, []);
 
-  const onLetterPress = (letter: string) => {
-    if (!word?.includes(letter)) {
-      setAvailableMistakes(availableMistakes - 1);
-    }
+  const availableMistakes = MAX_MISTAKES - selectedLetters.filter(l => !word?.includes(l)).length;
+  const wordGuessed = word?.split('').every(l => selectedLetters.includes(l) || l === '-') ?? false;
 
+  const onLetterPress = (letter: string) => {
     const newSelectedLetters = [...selectedLetters, letter];
     setSelectedLetters(newSelectedLetters);
-
-    word?.split('').every(l => newSelectedLetters.includes(l) || l === '-') && setWordGuessed(true);
   };
 
   return (
@@ -57,9 +53,7 @@ const HangmanScreen = () => {
         <ButtonApp
           label="Nuevo juego"
           onPress={() => {
-            setAvailableMistakes(7);
             setSelectedLetters([]);
-            setWordGuessed(false);
             generateNewWord();
           }}
         />
