@@ -4,7 +4,6 @@ import HangScenario from './components/hangScenario/HangScenario';
 import WordToGuess from './components/wordToGuess/WordToGuess';
 import TextApp from '~/components/texts/text/TextApp';
 import HangmanKeyboard from './components/keyboard/HangmanKeyboard';
-import ButtonApp from '~/components/buttons/button/ButtonApp';
 import {useWordGenerator} from '../../../../hooks/useWordGenerator';
 import TextStyles from '~/constants/TextStyles';
 import {MAX_MISTAKES} from './Constants';
@@ -27,6 +26,11 @@ const HangmanScreen = () => {
     setSelectedLetters(newSelectedLetters);
   };
 
+  const handleResetGame = () => {
+    setSelectedLetters([]);
+    generateNewWord();
+  };
+
   if (!word) {
     return (
       <View style={styles.container}>
@@ -34,11 +38,6 @@ const HangmanScreen = () => {
       </View>
     );
   }
-
-  const handleResetGame = () => {
-    setSelectedLetters([]);
-    generateNewWord();
-  };
 
   return (
     <View style={styles.container}>
