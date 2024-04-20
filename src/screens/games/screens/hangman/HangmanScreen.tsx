@@ -8,6 +8,7 @@ import ButtonApp from '~/components/buttons/button/ButtonApp';
 import {useWordGenerator} from '../../../../hooks/useWordGenerator';
 import TextStyles from '~/constants/TextStyles';
 import {MAX_MISTAKES} from './Constants';
+import GameOverModal from './components/gameOverModal/GameOverModal';
 
 const HangmanScreen = () => {
   const {generateNewWord, word} = useWordGenerator();
@@ -19,45 +20,44 @@ const HangmanScreen = () => {
 
   const availableMistakes = MAX_MISTAKES - selectedLetters.filter(l => !word?.includes(l)).length;
   const wordGuessed = word?.split('').every(l => selectedLetters.includes(l) || l === '-') ?? false;
+  const gameOver = availableMistakes === 0 || wordGuessed;
 
   const onLetterPress = (letter: string) => {
     const newSelectedLetters = [...selectedLetters, letter];
     setSelectedLetters(newSelectedLetters);
   };
 
+  if (!word) {
+    return (
+      <View style={styles.container}>
+        <TextApp style={TextStyles.screenTitle}>Cargando...</TextApp>
+      </View>
+    );
+  }
+
+  const handleResetGame = () => {
+    setSelectedLetters([]);
+    generateNewWord();
+  };
+
   return (
     <View style={styles.container}>
-      {(wordGuessed || availableMistakes === 0) && (
-        <>
-          <TextApp style={TextStyles.screenTitle}>
-            {availableMistakes === 0
-              ? '¡Has perdido! La palabra era: ' + word
-              : '¡Felicidades! Has adivinado la palabra'}
-          </TextApp>
-        </>
-      )}
-      <HangScenario availableMistakes={availableMistakes} />
-      {!!word && (
-        <>
-          <WordToGuess word={word} selectedLetters={selectedLetters} />
-          <HangmanKeyboard
-            onLetterPress={onLetterPress}
-            selectedLetters={selectedLetters}
-            word={word}
-            wordGuessed={wordGuessed}
-            availableMistakes={availableMistakes}
-          />
-        </>
-      )}
-      {(wordGuessed || availableMistakes === 0) && (
-        <ButtonApp
-          label="Nuevo juego"
-          onPress={() => {
-            setSelectedLetters([]);
-            generateNewWord();
-          }}
+      {gameOver && (
+        <GameOverModal
+          word={word}
+          availableMistakes={availableMistakes}
+          onResetGame={handleResetGame}
         />
       )}
+      <HangScenario availableMistakes={availableMistakes} />
+      <WordToGuess word={word} selectedLetters={selectedLetters} />
+      <HangmanKeyboard
+        onLetterPress={onLetterPress}
+        selectedLetters={selectedLetters}
+        word={word}
+        wordGuessed={wordGuessed}
+        availableMistakes={availableMistakes}
+      />
     </View>
   );
 };
