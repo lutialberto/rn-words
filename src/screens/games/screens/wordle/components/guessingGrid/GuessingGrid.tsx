@@ -1,20 +1,21 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {MAX_GUESSES} from '../../Constants';
 
 interface GuessingGridProps {
   wordSize: number;
   maxGuesses: number;
   guesses: string[];
+  availableMistakes: number;
   word: string;
-  currentGuessPosition: number;
 }
 
 const GuessingGrid = ({
   wordSize,
   maxGuesses,
   guesses,
+  availableMistakes,
   word,
-  currentGuessPosition,
 }: GuessingGridProps) => {
   const getLetter = (wordIndex: number, letterIndex: number) => {
     const word = guesses[wordIndex];
@@ -23,23 +24,26 @@ const GuessingGrid = ({
 
   return (
     <View style={styles.gridContainer}>
-      {Array.from({length: maxGuesses}).map((_, j) => (
-        <View style={[styles.rowContainer, j === 0 && styles.firstRowContainer]} key={j}>
-          {Array.from({length: wordSize}).map((_, i) => {
-            const letter = getLetter(j, i);
+      {Array.from({length: maxGuesses}).map((_, row) => (
+        <View style={[styles.rowContainer, row === 0 && styles.firstRowContainer]} key={row}>
+          {Array.from({length: wordSize}).map((_, column) => {
+            const letter = getLetter(row, column);
+            const isFirstColumn = column === 0;
+            const canShowHint = MAX_GUESSES - availableMistakes > row;
+            const containsLetter =
+              canShowHint && letter !== '' && word.includes(letter.toLowerCase());
+            const isCorrectPosition = canShowHint && letter.toLowerCase() === word.charAt(column);
+            const isCurrentLetter = row === guesses.length - 1 && column === guesses[row].length;
+
             return (
               <View
-                key={i}
+                key={column}
                 style={[
                   styles.letterContainer,
-                  i === 0 && styles.firstLetterContainer,
-                  currentGuessPosition !== j &&
-                    letter !== '' &&
-                    word.includes(letter) &&
-                    styles.letterContainerCorrectLetter,
-                  currentGuessPosition !== j &&
-                    letter === word.charAt(i) &&
-                    styles.letterContainerCorrectPosition,
+                  isFirstColumn && styles.firstLetterContainer,
+                  containsLetter && styles.letterContainerCorrectLetter,
+                  isCorrectPosition && styles.letterContainerCorrectPosition,
+                  isCurrentLetter && styles.letterContainerCurrentLetter,
                 ]}>
                 <Text style={styles.letter}>{letter}</Text>
               </View>
@@ -83,6 +87,9 @@ const styles = StyleSheet.create({
   },
   letterContainerCorrectLetter: {
     backgroundColor: 'yellow',
+  },
+  letterContainerCurrentLetter: {
+    backgroundColor: 'lightblue',
   },
   letter: {
     fontSize: 20,

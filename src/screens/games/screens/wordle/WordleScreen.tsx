@@ -1,27 +1,22 @@
-import {Alert, StyleSheet, Text, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import WordleKeyboard from './components/keyboard/WordleKeyboard';
 import {useWordGenerator} from '~/hooks/useWordGenerator';
 import GuessingGrid from './components/guessingGrid/GuessingGrid';
 import ButtonApp from '~/components/buttons/button/ButtonApp';
-import TextApp from '~/components/texts/text/TextApp';
 import {useWordValidator} from '~/hooks/useWordValidator';
-import {GUESSES_INIT, MAX_GUESSES, WORD_SIZE} from './Constants';
+import {MAX_GUESSES, WORD_SIZE} from './Constants';
 import Loading from '~/components/loading/Loading';
 import WordleGameOverModal from './components/gameOverModal/WordleGameOverModal';
 
 const WordleScreen = () => {
   const {generateNewWord, word} = useWordGenerator();
   const {isValidWord} = useWordValidator();
-  const [guesses, setGuesses] = useState<string[]>(GUESSES_INIT);
+  const [currentGuess, setCurrentGuess] = useState('');
+  const [guesses, setGuesses] = useState<string[]>([]);
 
-  const selectedLetters = guesses.reduce<string[]>((acc, g) => acc.concat(g.split('')), []);
-  const numberOfGuessess = guesses.filter(
-    guess => guess.length === word?.length && guess !== word,
-  ).length;
-  const availableMistakes = MAX_GUESSES - numberOfGuessess;
-  const currentGuessPosition = guesses.length - availableMistakes;
-  const wordGuessed = !!word && guesses.includes(word);
+  const availableMistakes = MAX_GUESSES - guesses.length;
+  const wordGuessed = word != undefined && guesses.includes(word.toUpperCase());
   const isGameOver = availableMistakes == 0 || wordGuessed;
 
   useEffect(() => {
@@ -29,35 +24,39 @@ const WordleScreen = () => {
   }, []);
 
   const onLetterPress = (letter: string) => {
-    const currentGuess = guesses[currentGuessPosition];
-    if (currentGuess.length === WORD_SIZE) return;
+    const newGuesses =
+      currentGuess.length >= WORD_SIZE
+        ? currentGuess.substring(0, WORD_SIZE - 1) + letter
+        : currentGuess + letter;
 
-    const newGuesses = guesses.map((g, i) =>
-      i === currentGuessPosition ? currentGuess + letter : g,
-    );
-    setGuesses(newGuesses);
+    setCurrentGuess(newGuesses);
   };
 
-  const handleClear = () => {
-    const newGuesses = guesses.map((g, i) => (i === currentGuessPosition ? '' : g));
-    setGuesses(newGuesses);
+  const handleClearGuess = () => {
+    setCurrentGuess('');
+  };
+
+  const handleClearLetter = () => {
+    setCurrentGuess(prev => prev.slice(0, -1));
   };
 
   const handleConfirmWord = () => {
-    const currentGuess = guesses[currentGuessPosition];
     isValidWord(currentGuess).then(isValid => {
       if (!isValid) {
         Alert.alert('Error', 'La palabra ingresada no es válida');
+      } else {
+        setGuesses([...guesses, currentGuess]);
+        setCurrentGuess('');
       }
     });
   };
 
   const handlePlayAgain = () => {
-    setGuesses(GUESSES_INIT);
+    setGuesses([]);
     generateNewWord(WORD_SIZE);
   };
 
-  const confirmButtonEnabled = guesses[currentGuessPosition]?.length === WORD_SIZE;
+  const confirmButtonEnabled = currentGuess.length === WORD_SIZE;
 
   if (!word) return <Loading />;
 
@@ -73,13 +72,13 @@ const WordleScreen = () => {
       <GuessingGrid
         wordSize={WORD_SIZE}
         maxGuesses={MAX_GUESSES}
-        guesses={guesses}
+        availableMistakes={availableMistakes}
+        guesses={[...guesses, currentGuess]}
         word={word}
-        currentGuessPosition={currentGuessPosition}
       />
       <WordleKeyboard
         onLetterPress={onLetterPress}
-        selectedLetters={selectedLetters}
+        guesses={guesses}
         word={word}
         wordGuessed={wordGuessed}
         availableMistakes={availableMistakes}
@@ -87,13 +86,21 @@ const WordleScreen = () => {
       {!isGameOver && (
         <View style={styles.buttonsContainer}>
           <ButtonApp
-            label={'Borrar'}
-            onPress={handleClear}
+            label={'Borrar Letra'}
+            onPress={handleClearLetter}
             variant="outline"
             containerStyle={{flex: 1}}
+            enabled={currentGuess.length > 0}
           />
           <ButtonApp
-            label={'Confirmar'}
+            label={'Borrar Palabra'}
+            onPress={handleClearGuess}
+            variant="outline"
+            containerStyle={{flex: 1}}
+            enabled={currentGuess.length > 0}
+          />
+          <ButtonApp
+            label={'Confirmar Palabra'}
             onPress={handleConfirmWord}
             enabled={confirmButtonEnabled}
             containerStyle={{flex: 1}}
@@ -117,6 +124,6 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    gap: 20,
+    gap: 10,
   },
 });
