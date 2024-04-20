@@ -6,106 +6,99 @@ import GuessingGrid from './components/guessingGrid/GuessingGrid';
 import ButtonApp from '~/components/buttons/button/ButtonApp';
 import TextApp from '~/components/texts/text/TextApp';
 import {useWordValidator} from '~/hooks/useWordValidator';
-
-const WORD_SIZE = 5;
-const MAX_GUESSES = 5;
-const GUESSES_INIT = Array.from({length: MAX_GUESSES}).map(() => '');
+import {GUESSES_INIT, MAX_GUESSES, WORD_SIZE} from './Constants';
+import Loading from '~/components/loading/Loading';
+import WordleGameOverModal from './components/gameOverModal/WordleGameOverModal';
 
 const WordleScreen = () => {
-  const [availableMistakes, setAvailableMistakes] = useState(MAX_GUESSES);
   const {generateNewWord, word} = useWordGenerator();
   const {isValidWord} = useWordValidator();
-  const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
   const [guesses, setGuesses] = useState<string[]>(GUESSES_INIT);
-  const [wordGuessed, setWordGuessed] = useState(false);
+
+  const selectedLetters = guesses.reduce<string[]>((acc, g) => acc.concat(g.split('')), []);
+  const numberOfGuessess = guesses.filter(
+    guess => guess.length === word?.length && guess !== word,
+  ).length;
+  const availableMistakes = MAX_GUESSES - numberOfGuessess;
+  const currentGuessPosition = guesses.length - availableMistakes;
+  const wordGuessed = !!word && guesses.includes(word);
+  const isGameOver = availableMistakes == 0 || wordGuessed;
 
   useEffect(() => {
     generateNewWord(WORD_SIZE);
   }, []);
 
   const onLetterPress = (letter: string) => {
-    const currentGuess = guesses[guesses.length - availableMistakes];
+    const currentGuess = guesses[currentGuessPosition];
     if (currentGuess.length === WORD_SIZE) return;
 
     const newGuesses = guesses.map((g, i) =>
-      i === guesses.length - availableMistakes ? currentGuess + letter : g,
+      i === currentGuessPosition ? currentGuess + letter : g,
     );
     setGuesses(newGuesses);
   };
 
   const handleClear = () => {
-    const newGuesses = guesses.map((g, i) => (i === guesses.length - availableMistakes ? '' : g));
+    const newGuesses = guesses.map((g, i) => (i === currentGuessPosition ? '' : g));
     setGuesses(newGuesses);
   };
 
   const handleConfirmWord = () => {
-    const currentGuess = guesses[guesses.length - availableMistakes];
+    const currentGuess = guesses[currentGuessPosition];
     isValidWord(currentGuess).then(isValid => {
       if (!isValid) {
         Alert.alert('Error', 'La palabra ingresada no es válida');
-        return;
-      }
-
-      const newSelectedLetters = [...selectedLetters, ...currentGuess.split('')];
-      setSelectedLetters(newSelectedLetters);
-
-      if (currentGuess === word) {
-        setWordGuessed(true);
-      } else {
-        setAvailableMistakes(availableMistakes - 1);
       }
     });
   };
 
   const handlePlayAgain = () => {
-    setAvailableMistakes(MAX_GUESSES);
-    setSelectedLetters([]);
     setGuesses(GUESSES_INIT);
-    setWordGuessed(false);
     generateNewWord(WORD_SIZE);
   };
 
-  const confirmButtonEnabled = guesses[guesses.length - availableMistakes]?.length === WORD_SIZE;
+  const confirmButtonEnabled = guesses[currentGuessPosition]?.length === WORD_SIZE;
+
+  if (!word) return <Loading />;
 
   return (
     <View style={styles.container}>
-      {availableMistakes === 0 && <TextApp>Perdiste! La palabra secreta es {word}</TextApp>}
-      {wordGuessed && <TextApp>Ganaste!</TextApp>}
-      {!!word && (
-        <>
-          <GuessingGrid
-            wordSize={WORD_SIZE}
-            maxGuesses={MAX_GUESSES}
-            guesses={guesses}
-            word={word}
-            currentGuessPosition={guesses.length - availableMistakes}
+      {isGameOver && (
+        <WordleGameOverModal
+          word={word}
+          availableMistakes={availableMistakes}
+          onResetGame={handlePlayAgain}
+        />
+      )}
+      <GuessingGrid
+        wordSize={WORD_SIZE}
+        maxGuesses={MAX_GUESSES}
+        guesses={guesses}
+        word={word}
+        currentGuessPosition={currentGuessPosition}
+      />
+      <WordleKeyboard
+        onLetterPress={onLetterPress}
+        selectedLetters={selectedLetters}
+        word={word}
+        wordGuessed={wordGuessed}
+        availableMistakes={availableMistakes}
+      />
+      {!isGameOver && (
+        <View style={styles.buttonsContainer}>
+          <ButtonApp
+            label={'Borrar'}
+            onPress={handleClear}
+            variant="outline"
+            containerStyle={{flex: 1}}
           />
-          <WordleKeyboard
-            onLetterPress={onLetterPress}
-            selectedLetters={selectedLetters}
-            word={word}
-            wordGuessed={wordGuessed}
-            availableMistakes={availableMistakes}
+          <ButtonApp
+            label={'Confirmar'}
+            onPress={handleConfirmWord}
+            enabled={confirmButtonEnabled}
+            containerStyle={{flex: 1}}
           />
-          {availableMistakes !== 0 && !wordGuessed ? (
-            <View style={styles.buttonsContainer}>
-              <ButtonApp
-                label={'Borrar'}
-                onPress={handleClear}
-                variant="outline"
-                containerStyle={{flex: 1}}
-              />
-              <ButtonApp
-                label={'Confirmar'}
-                onPress={handleConfirmWord}
-                enabled={confirmButtonEnabled}
-                containerStyle={{flex: 1}}
-              />
-            </View>
-          ) : (
-            <ButtonApp label={'Jugar de nuevo'} onPress={handlePlayAgain} />
-          )}
-        </>
+        </View>
       )}
     </View>
   );
