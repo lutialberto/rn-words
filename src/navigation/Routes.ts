@@ -7,6 +7,7 @@ export const ROUTES = {
     GAMES,
     HANGMAN: `${GAMES}/Hangman`,
     WORDLE: `${GAMES}/Wordle`,
+    PERMUTATION: `${GAMES}/Permutation`,
   },
 
   DICTIONARY: 'Dictionary',

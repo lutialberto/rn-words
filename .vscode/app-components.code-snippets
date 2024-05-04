@@ -27,4 +27,20 @@
     "body": ["<TextApp$1>{'${2:Text}'}</TextApp>"],
     "description": "Text component"
   },
+  "Spinner": {
+    "scope": "typescriptreact",
+    "prefix": "appSpinner",
+    "body": [
+      "<SpinnerApp$1",
+      " visible={true}",
+      " style={{",
+      "  //flex: 1,//usar este",
+      "  //height: 100,//o este",
+      " }}",
+      ">",
+      "  <Text>Spinner Result</Text>",
+      "</SpinnerApp>"
+    ],
+    "description": "Spinner component"
+  },
 }

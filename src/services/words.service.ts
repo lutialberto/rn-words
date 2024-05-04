@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {BASE_URL, WORDS_CONTROLLER} from './Config';
 import {WordRequest} from './models/words/wordRequest';
+import {PermutationRequest} from './models/words/PermutationRequest';
+import {PermutationResponse} from './models/words/PermutationResponse';
 
 export const fetchRandomWord = async (length?: number) => {
   try {
@@ -30,5 +32,20 @@ export const fetchWordsByFilter = async (params?: WordRequest) => {
   } catch (error) {
     console.log(error);
     throw new Error('Error fetching words');
+  }
+};
+
+export const fetchPermutationsByFilter = async (
+  params?: PermutationRequest,
+): Promise<PermutationResponse> => {
+  try {
+    return await axios
+      .get<PermutationResponse>(`${BASE_URL}${WORDS_CONTROLLER}/permutations`, {
+        params,
+      })
+      .then(response => response.data);
+  } catch (error) {
+    console.log(error);
+    throw new Error('Error fetching permutations');
   }
 };

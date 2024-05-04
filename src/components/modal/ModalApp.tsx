@@ -1,14 +1,15 @@
-import {StyleSheet, Modal, View, StyleProp, ViewStyle} from 'react-native';
+import {StyleSheet, Modal, View, StyleProp, ViewStyle, ModalBaseProps} from 'react-native';
 import React from 'react';
 
 interface ModalProps {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  modalProps?: ModalBaseProps;
 }
 
-const ModalApp = ({children, style}: ModalProps) => {
+const ModalApp = ({children, style, modalProps}: ModalProps) => {
   return (
-    <Modal transparent>
+    <Modal transparent {...modalProps}>
       <View style={styles.transparentContainer}>
         <View style={[styles.container, style]}>{children}</View>
       </View>

@@ -10,6 +10,10 @@ export const useGameButtons = (navigator: MainScreenNavigationType) => {
       title: 'Wordle',
       onPress: () => navigator.navigate('Games/Wordle'),
     },
+    {
+      title: 'Permutaciones',
+      onPress: () => navigator.navigate('Games/Permutation'),
+    },
   ];
 
   return buttons;
