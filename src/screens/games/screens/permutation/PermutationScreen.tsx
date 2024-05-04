@@ -10,6 +10,7 @@ import PermutationGameOverModal from './components/PermutationGameOverModal';
 import {MAX_MISTAKES} from './Constants';
 import Errors from './components/Errors';
 import SpinnerApp from '~/components/containers/loading/spinner/SpinnerApp';
+import {savePermutationsWrongGuesses} from '~/services/words.service';
 
 const PermutationScreen = () => {
   const {
@@ -50,6 +51,10 @@ const PermutationScreen = () => {
 
   const handleStartNewGame = () => {
     setWrongGuesses([]);
+    savePermutationsWrongGuesses({
+      wrongGuesses,
+      letters: letters.map(letter => letter.value),
+    });
     generatePermutations();
   };
 

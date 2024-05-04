@@ -3,6 +3,7 @@ import {BASE_URL, WORDS_CONTROLLER} from './Config';
 import {WordRequest} from './models/words/wordRequest';
 import {PermutationRequest} from './models/words/PermutationRequest';
 import {PermutationResponse} from './models/words/PermutationResponse';
+import {SavePermutationsWrongGuessesRequest} from './models/words/SavePermutationWrongGuessesRequest';
 
 export const fetchRandomWord = async (length?: number) => {
   try {
@@ -47,5 +48,19 @@ export const fetchPermutationsByFilter = async (
   } catch (error) {
     console.log(error);
     throw new Error('Error fetching permutations');
+  }
+};
+
+export const savePermutationsWrongGuesses = async (
+  body: SavePermutationsWrongGuessesRequest,
+): Promise<void> => {
+  try {
+    return await axios
+      .post(`${BASE_URL}${WORDS_CONTROLLER}/permutations/wrong-guesses`, body)
+      .then(response => response.data)
+      .catch(error => console.log({error}));
+  } catch (error) {
+    console.log({error});
+    throw new Error('Error saving wrongs permutations');
   }
 };
