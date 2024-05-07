@@ -44,8 +44,6 @@ const WordleScreen = () => {
   const handleConfirmWord = () => {
     isValidWord(currentGuess).then(isValid => {
       if (!isValid) {
-        console.log('currentGuess', currentGuess);
-
         saveWordleWrongGuess(currentGuess);
         Alert.alert('Error', 'La palabra ingresada no es válida');
       } else {
