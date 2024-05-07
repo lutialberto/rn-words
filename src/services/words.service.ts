@@ -64,3 +64,17 @@ export const savePermutationsWrongGuesses = async (
     throw new Error('Error saving wrongs permutations');
   }
 };
+
+export const saveWordleWrongGuess = async (word: string): Promise<void> => {
+  try {
+    return await axios
+      .post(`${BASE_URL}${WORDS_CONTROLLER}/wordle/wrong-guess`, {
+        word,
+      })
+      .then(response => response.data)
+      .catch(error => console.log({error}));
+  } catch (error) {
+    console.log({error});
+    throw new Error('Error saving wrong wordle guess');
+  }
+};

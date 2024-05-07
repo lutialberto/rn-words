@@ -8,6 +8,7 @@ import {useWordValidator} from '~/hooks/useWordValidator';
 import {MAX_GUESSES, WORD_SIZE} from './Constants';
 import Loading from '~/components/loading/Loading';
 import WordleGameOverModal from './components/gameOverModal/WordleGameOverModal';
+import {saveWordleWrongGuess} from '~/services/words.service';
 
 const WordleScreen = () => {
   const {generateNewWord, word} = useWordGenerator();
@@ -43,6 +44,9 @@ const WordleScreen = () => {
   const handleConfirmWord = () => {
     isValidWord(currentGuess).then(isValid => {
       if (!isValid) {
+        console.log('currentGuess', currentGuess);
+
+        saveWordleWrongGuess(currentGuess);
         Alert.alert('Error', 'La palabra ingresada no es válida');
       } else {
         setGuesses([...guesses, currentGuess]);
