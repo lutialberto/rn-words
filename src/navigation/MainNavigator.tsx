@@ -11,6 +11,7 @@ import WordCreatorScreen from '~/screens/wordCreator/WordCreatorScreen';
 import HangmanScreen from '~/screens/games/screens/hangman/HangmanScreen';
 import WordleScreen from '~/screens/games/screens/wordle/WordleScreen';
 import PermutationScreen from '~/screens/games/screens/permutation/PermutationScreen';
+import TabooScreen from '~/screens/games/screens/taboo/TabooScreen';
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
 
@@ -38,6 +39,10 @@ const MainNavigator = () => {
         <Stack.Screen
           name={ROUTES.GAMES.PERMUTATION as keyof MainStackParamList}
           component={PermutationScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.GAMES.TABOO as keyof MainStackParamList}
+          component={TabooScreen}
         />
 
         <Stack.Screen

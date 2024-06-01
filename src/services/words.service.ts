@@ -4,6 +4,7 @@ import {WordRequest} from './models/words/wordRequest';
 import {PermutationRequest} from './models/words/PermutationRequest';
 import {PermutationResponse} from './models/words/PermutationResponse';
 import {SavePermutationsWrongGuessesRequest} from './models/words/SavePermutationWrongGuessesRequest';
+import {TabooCard} from '~/screens/games/screens/taboo/models/TabooCard';
 
 export const fetchRandomWord = async (length?: number) => {
   try {
@@ -76,5 +77,21 @@ export const saveWordleWrongGuess = async (word: string): Promise<void> => {
   } catch (error) {
     console.log({error});
     throw new Error('Error saving wrong wordle guess');
+  }
+};
+
+export const fetchTabooCard = async (wordIdsToExclude: number[]): Promise<TabooCard> => {
+  try {
+    return await axios
+      .get(`${BASE_URL}${WORDS_CONTROLLER}/taboo`, {
+        params: {
+          wordIdsToExclude,
+        },
+      })
+      .then(response => response.data)
+      .catch(error => console.log({error}));
+  } catch (error) {
+    console.log({error});
+    throw new Error('Error fetching taboo cards');
   }
 };

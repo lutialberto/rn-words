@@ -7,6 +7,7 @@ export type MainStackParamList = {
   'Games/Hangman': undefined;
   'Games/Wordle': undefined;
   'Games/Permutation': undefined;
+  'Games/Taboo': undefined;
 
   Dictionary: undefined;
   RandomWordGenerator: undefined;

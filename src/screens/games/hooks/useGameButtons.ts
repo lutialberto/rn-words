@@ -14,6 +14,10 @@ export const useGameButtons = (navigator: MainScreenNavigationType) => {
       title: 'Permutaciones',
       onPress: () => navigator.navigate('Games/Permutation'),
     },
+    {
+      title: 'Taboo',
+      onPress: () => navigator.navigate('Games/Taboo'),
+    },
   ];
 
   return buttons;

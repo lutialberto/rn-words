@@ -8,6 +8,7 @@ export const ROUTES = {
     HANGMAN: `${GAMES}/Hangman`,
     WORDLE: `${GAMES}/Wordle`,
     PERMUTATION: `${GAMES}/Permutation`,
+    TABOO: `${GAMES}/Taboo`,
   },
 
   DICTIONARY: 'Dictionary',
