@@ -1,11 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import ScreenContainer from '~/components/containers/screenContainer/ScreenContainer';
 
 const WordCreatorScreen = () => {
   return (
-    <View>
+    <ScreenContainer>
       <Text>WordCreatorScreen</Text>
-    </View>
+    </ScreenContainer>
   );
 };
 

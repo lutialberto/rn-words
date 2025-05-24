@@ -9,6 +9,7 @@ import TextStyles from '~/constants/TextStyles';
 import {MAX_MISTAKES} from './Constants';
 import GameOverModal from './components/gameOverModal/GameOverModal';
 import Loading from '~/components/loading/Loading';
+import ScreenContainer from '~/components/containers/screenContainer/ScreenContainer';
 
 const HangmanScreen = () => {
   const {generateNewWord, word} = useWordGenerator();
@@ -35,7 +36,7 @@ const HangmanScreen = () => {
   if (!word) return <Loading />;
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       {gameOver && (
         <GameOverModal
           word={word}
@@ -52,7 +53,7 @@ const HangmanScreen = () => {
         wordGuessed={wordGuessed}
         availableMistakes={availableMistakes}
       />
-    </View>
+    </ScreenContainer>
   );
 };
 

@@ -11,6 +11,7 @@ import {MAX_MISTAKES} from './Constants';
 import Errors from './components/Errors';
 import SpinnerApp from '~/components/containers/loading/spinner/SpinnerApp';
 import {savePermutationsWrongGuesses} from '~/services/words.service';
+import ScreenContainer from '~/components/containers/screenContainer/ScreenContainer';
 
 const PermutationScreen = () => {
   const {
@@ -59,48 +60,54 @@ const PermutationScreen = () => {
   };
 
   return (
-    <SpinnerApp
-      visible={!permutations}
-      style={{
-        flex: 1,
-        padding: 15,
-      }}>
-      <PermutationGameOverModal
-        visible={isGameOver}
-        gameWon={availablePermutations === 0}
-        permutations={permutations}
-        onStartNewGame={handleStartNewGame}
-      />
-      <View style={{flexDirection: 'row', flex: 1}}>
-        <Permutations permutations={permutations} />
-        <Errors wrongGuesses={wrongGuesses} />
-      </View>
-      <View style={{alignItems: 'center', gap: 15}}>
-        <View style={{alignItems: 'center', flexDirection: 'row', gap: 15}}>
-          <TextApp>Palabra generada</TextApp>
-          {pressedLetters.length > 0 && (
-            <ButtonApp variant="outline" label={'Borrar'} onPress={clearPressedLetters} />
+    <ScreenContainer>
+      <SpinnerApp
+        visible={!permutations}
+        style={{
+          flex: 1,
+          padding: 15,
+        }}>
+        <PermutationGameOverModal
+          visible={isGameOver}
+          gameWon={availablePermutations === 0}
+          permutations={permutations}
+          onStartNewGame={handleStartNewGame}
+        />
+        <View style={{flexDirection: 'row', flex: 1}}>
+          <Permutations permutations={permutations} />
+          <Errors wrongGuesses={wrongGuesses} />
+        </View>
+        <View style={{alignItems: 'center', gap: 15}}>
+          <View style={{alignItems: 'center', flexDirection: 'row', gap: 15}}>
+            <TextApp>Palabra generada</TextApp>
+            {pressedLetters.length > 0 && (
+              <ButtonApp variant="outline" label={'Borrar'} onPress={clearPressedLetters} />
+            )}
+          </View>
+          <Letters
+            letters={letters}
+            onLetterPress={handlePressedLetterPress}
+            displayType="pressed"
+          />
+          <View style={{alignItems: 'center', flexDirection: 'row', gap: 15}}>
+            <TextApp>Letras disponibles</TextApp>
+            <ButtonApp variant="outline" label={'Mezclar letras'} onPress={shuffleLetters} />
+          </View>
+          <Letters
+            letters={letters}
+            onLetterPress={handleAvailableLetterPress}
+            displayType="available"
+          />
+          {!isGameOver && (
+            <ButtonApp
+              label={'Confirmar Palabra'}
+              onPress={handleConfirmWord}
+              enabled={pressedLetters.length > 0}
+            />
           )}
         </View>
-        <Letters letters={letters} onLetterPress={handlePressedLetterPress} displayType="pressed" />
-        <View style={{alignItems: 'center', flexDirection: 'row', gap: 15}}>
-          <TextApp>Letras disponibles</TextApp>
-          <ButtonApp variant="outline" label={'Mezclar letras'} onPress={shuffleLetters} />
-        </View>
-        <Letters
-          letters={letters}
-          onLetterPress={handleAvailableLetterPress}
-          displayType="available"
-        />
-        {!isGameOver && (
-          <ButtonApp
-            label={'Confirmar Palabra'}
-            onPress={handleConfirmWord}
-            enabled={pressedLetters.length > 0}
-          />
-        )}
-      </View>
-    </SpinnerApp>
+      </SpinnerApp>
+    </ScreenContainer>
   );
 };
 

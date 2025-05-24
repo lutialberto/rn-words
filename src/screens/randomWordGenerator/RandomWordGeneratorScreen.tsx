@@ -1,11 +1,12 @@
 import {View, Text} from 'react-native';
 import React from 'react';
+import ScreenContainer from '~/components/containers/screenContainer/ScreenContainer';
 
 const RandomWordGeneratorScreen = () => {
   return (
-    <View>
+    <ScreenContainer>
       <Text>RandomWordGeneratorScreen</Text>
-    </View>
+    </ScreenContainer>
   );
 };
 

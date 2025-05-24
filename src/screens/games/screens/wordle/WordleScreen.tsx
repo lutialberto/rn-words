@@ -9,6 +9,7 @@ import {MAX_GUESSES, WORD_SIZE} from './Constants';
 import Loading from '~/components/loading/Loading';
 import WordleGameOverModal from './components/gameOverModal/WordleGameOverModal';
 import {saveWordleWrongGuess} from '~/services/words.service';
+import ScreenContainer from '~/components/containers/screenContainer/ScreenContainer';
 
 const WordleScreen = () => {
   const {generateNewWord, word} = useWordGenerator();
@@ -63,7 +64,7 @@ const WordleScreen = () => {
   if (!word) return <Loading />;
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       {isGameOver && (
         <WordleGameOverModal
           word={word}
@@ -109,7 +110,7 @@ const WordleScreen = () => {
           />
         </View>
       )}
-    </View>
+    </ScreenContainer>
   );
 };
 
