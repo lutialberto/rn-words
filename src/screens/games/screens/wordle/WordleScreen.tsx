@@ -17,7 +17,7 @@ const WordleScreen = () => {
   const [guesses, setGuesses] = useState<string[]>([]);
 
   const availableMistakes = MAX_GUESSES - guesses.length;
-  const wordGuessed = word != undefined && guesses.includes(word.toUpperCase());
+  const wordGuessed = word != undefined && guesses.includes(word);
   const isGameOver = availableMistakes == 0 || wordGuessed;
 
   useEffect(() => {
